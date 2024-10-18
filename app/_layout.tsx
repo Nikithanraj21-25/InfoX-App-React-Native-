@@ -1,21 +1,30 @@
+import { Drawer } from "expo-router/drawer";
 import { Stack } from "expo-router";
-import { DataProvider } from "./DataContext";
 
 export default function RootLayout() {
   return (
-       // Wrap the entire layout including Stack with DataProvider
-    <DataProvider>
-      <RootStack />
-    </DataProvider>
-  );
-}
-
-// Create a separate component for the stack
-function RootStack() {
-  return (
-    <Stack>
-      <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="data-page" options={{ title: 'Stored Data' }} />
-    </Stack>
+    <Drawer
+    screenOptions={{
+      headerStyle: {
+        backgroundColor: '#00539CFF', // Header background color
+      },
+      headerTintColor: '#FFFFFF', // Header text and icon color
+    }}
+  >
+      <Drawer.Screen
+        name="index" 
+        options={{ 
+          drawerLabel: "Home", 
+          headerTitle: "Click2Contact"
+        }}
+      />
+      <Drawer.Screen 
+        name="AboutUs" 
+        options={{ 
+          drawerLabel: "About Us", 
+          headerTitle: "About Us" 
+        }} 
+      />
+    </Drawer>
   );
 }
