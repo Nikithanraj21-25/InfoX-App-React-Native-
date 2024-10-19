@@ -57,6 +57,8 @@ export default function App() {
       const savedImageUri = await AsyncStorage.getItem('previousImageUri');
       if (savedImageUri) {
         setPreviousImageUri(savedImageUri);
+      }else{
+        Contacts.requestPermission();
       }
     };
 
@@ -166,7 +168,6 @@ export default function App() {
   const requestPermissions = async () => {
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
     const mediaLibraryPermission = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    Contacts.requestPermission();
     if (!permissionResult.granted || !mediaLibraryPermission.granted) {
       alert('Permission to access camera and media library is required!');
       return false;
