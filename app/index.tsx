@@ -65,7 +65,7 @@ export default function App() {
 
   useEffect(() => {
     if (extractedText && isTextExtracted) {
-      saveContact(); // Call saveContact only when text is fully extracted
+      saveContact();
     }
   }, [extractedText, isTextExtracted]);
 
@@ -87,6 +87,7 @@ export default function App() {
         // Check if Contacts is not null
         if (!Contacts) {
           Alert.alert('Error', 'Contacts module is not initialized.');
+          setIsSaving(false);
           return;
         }
 
@@ -94,6 +95,7 @@ export default function App() {
 
       if (permission !== 'authorized') {
         Alert.alert('Permission Denied', 'Access to contacts is required to save.');
+        setIsSaving(false);
         return;
       }
 
@@ -101,6 +103,7 @@ export default function App() {
 
       if (!contactDetails.name || !contactDetails.phone) {
         Alert.alert('Missing Information', 'Both Name and Phone number are required to save a contact.');
+        setIsSaving(false);
         return;
       }
 
@@ -163,6 +166,7 @@ export default function App() {
   const requestPermissions = async () => {
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
     const mediaLibraryPermission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    Contacts.requestPermission();
     if (!permissionResult.granted || !mediaLibraryPermission.granted) {
       alert('Permission to access camera and media library is required!');
       return false;
@@ -239,7 +243,7 @@ export default function App() {
     }as any);
   
     try {
-      const response = await axios.post('http://192.168.73.128:3000/process-image', formData, {
+      const response = await axios.post('http://192.168.233.128:3000/process-image', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
