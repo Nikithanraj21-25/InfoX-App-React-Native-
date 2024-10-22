@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "InfoX",
-    "slug": "InfoX",
+    "name": "Cli2Con",
+    "slug": "Cli2Con",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/c2c.jpeg",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/c2cLogo.jpeg",
+      "image": "./assets/images/splash_logo_new.jpeg",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -18,7 +18,7 @@
     "android": {
       "permissions": ["READ_CONTACTS", "WRITE_CONTACTS"],
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/c2c.jpeg",
+        "foregroundImage": "./assets/images/logo_final.jpeg",
         "backgroundColor": "#ffffff"
       },
       "package": "com.nikithan.InfoX"

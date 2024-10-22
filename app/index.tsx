@@ -68,6 +68,8 @@ export default function App() {
   useEffect(() => {
     if (extractedText && isTextExtracted) {
       saveContact();
+      setExtractedText("");
+      setIsTextExtracted(false);
     }
   }, [extractedText, isTextExtracted]);
 
@@ -93,13 +95,15 @@ export default function App() {
           return;
         }
 
-      const permission = await Contacts.requestPermission();
+        // Check current permission status
+        const permission = await Contacts.checkPermission();
+        console.log("Current permission status:", permission);  
 
       if (permission !== 'authorized') {
         Alert.alert('Permission Denied', 'Access to contacts is required to save.');
         setIsSaving(false);
         return;
-      }
+      } 
 
       const contactDetails = JSON.parse(extractedText);
 
@@ -123,24 +127,28 @@ export default function App() {
         displayName: contactDetails.name,
         firstName,
         lastName,
-        phoneNumbers: [{ label: 'mobile', number: contactDetails.phone }],
-        emails: contactDetails.email ? [{ label: 'work', email: contactDetails.email }] : [],
-        organization: contactDetails.businessName || '',
+        phoneNumbers: contactDetails.phone ? [
+          { label: 'office', number: contactDetails.phone.office },
+          { label: 'mobile', number: contactDetails.phone.mobile }
+        ] : [],
+        emailAddresses: contactDetails.email ? [{ label: 'work', email: contactDetails.email }] : [],
+        company: contactDetails.company_name || 'Not Specified',
         postalAddresses: contactDetails.address
-          ? [{
-              label: 'home',
-              street: contactDetails.address,
-              city: '', // Add city if available
-              state: '', // Add state if available
-              country: '', // Add country if available
-              postalCode: '', // Add postal code if available
-              formattedAddress: '', // Add formatted address if available
-              pobox: '', // Add pobox if available
-              neighborhood: '', // Add neighborhood if available
-              region: '', // Add region if available
-              postCode: '' // Ensure postCode is included
-            }]
-          : [],
+        ? [{
+            label: 'work',
+            street: '', // Assume first part of address is the street
+            city: '',   // Assume second part is the city
+            state: '',                    // Add state if available
+            country: '',                  // Add country if available
+            postalCode: '',                    // Add postal code if available
+            formattedAddress: contactDetails.address || '',             // Default value for compatibility
+            pobox: '',                        // Default value for compatibility
+            neighborhood: '',                 // Default value for compatibility
+            region: '',                       // Default value for compatibility
+            postCode: ''            // Add postal code if available
+          }]
+        : [],
+        website : contactDetails.website || '',
         note: additionalInfo ? `Website: ${contactDetails.website || ''}\n${additionalInfo}` : '',
       };
 
@@ -168,9 +176,10 @@ export default function App() {
   const requestPermissions = async () => {
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
     const mediaLibraryPermission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    Contacts.requestPermission();
     if (!permissionResult.granted || !mediaLibraryPermission.granted) {
       alert('Permission to access camera and media library is required!');
-      return false;
+      return false; 
     }
     return true;
   };
@@ -244,12 +253,12 @@ export default function App() {
     }as any);
   
     try {
-      const response = await axios.post('http://192.168.233.128:3000/process-image', formData, {
+      const response = await axios.post('http://192.168.83.128:3000/process-image', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
-      console.log(response);
+      // console.log(response);
       setExtractedText(response.data.extractedText); 
       setIsTextExtracted(true);
     } catch (error) {
@@ -257,6 +266,8 @@ export default function App() {
       Alert.alert('Upload failed', 'There was an error uploading the image.');
     } finally {
       setLoading(false); 
+      setPreviousImageUri(uri);
+      setImageUri("");
     }
   };
 

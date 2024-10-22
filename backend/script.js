@@ -122,14 +122,15 @@ app.post('/process-image',upload.single('image'), async (req, res) => {
           content: [
             {
               type: 'text',
-              text: `Please provide the extracted details in plain JSON format without any additional text or formatting or quotes: {
+              text: `Please provide the extracted details in plain JSON format without any additional text or formatting or quotes and also you can add other information which are provide: {
             "name": "John Doe",
             "company_name": "Example Inc.",
             "phone": "123-456-7890",
             "email": "john.doe@example.com",
             "address": "123 Main St, Anytown, USA",
             "website": "www.example.com",
-            "additional_info": "Notes or other relevant info"
+            "job_title": "Software Engineer",
+            "linkedin": "https://linkedin.com/in/johndoe"
           }`
             },
             {
@@ -155,6 +156,7 @@ console.log('OpenAI API Response:', response.data);
 
     // Extracting the message content for better readability
     const extractedText = response.data.choices[0].message.content;
+    console.log(extractedText);
 
     // Assuming extractedText is a string that represents JSON
     let parsedData;
