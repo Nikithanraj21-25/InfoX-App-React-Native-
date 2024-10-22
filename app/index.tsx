@@ -2,26 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { SafeAreaView, Pressable, Text, Image, View, TextInput, StyleSheet, Alert, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import axios from 'axios';
 import * as ImagePicker from 'expo-image-picker';
-// import * as Contacts from 'expo-contacts';
 import Contacts from 'react-native-contacts';
 import { MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Define the type for your saved data
-interface SavedDataItem {
-  _id: string; // MongoDB uses _id as the identifier
-  serialNo: number;
-  name: string;
-  businessName: string;
-  phone: string;
-  email: string;
-  address: string;
-  website: string;
-  otherInfo?: string;
-  date: string;
-  time: string;
-}
-
 type PostalAddress = {
   street: string;
   city?: string;
@@ -31,27 +16,24 @@ type PostalAddress = {
   formattedAddress?: string;
   pobox?: string;
   neighborhood?: string;
-  region?: string; // Added region to match requirements
-  postCode?: string; // Added postCode to match requirements
-  [key: string]: any; // allow additional properties
-};
+  region?: string; 
+  postCode?: string; 
+  [key: string]: any;
+}
 
 export default function App() {
   const [imageUri, setImageUri] = useState<string | null>(null);
-  const [previousImageUri, setPreviousImageUri] = useState<string | null>(null); // Store previous image URI
+  const [previousImageUri, setPreviousImageUri] = useState<string | null>(null);
   const [extractedText, setExtractedText] = useState('');
   const [loading, setLoading] = useState(false);
   const [isTextExtracted, setIsTextExtracted] = useState(false);
-  // State to control the visibility of the expanded icons
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isSaving, setIsSaving] = useState(false); // Add a state variable to lock the function
+  const [isSaving, setIsSaving] = useState(false); 
 
-  // Function to toggle the expansion
   const toggleExpand = () => {
-    setIsExpanded((prev) => !prev); // Toggle the state without animation
+    setIsExpanded((prev) => !prev);
   };
 
-   // Load previous image on app start
    useEffect(() => {
     const loadPreviousImage = async () => {
       const savedImageUri = await AsyncStorage.getItem('previousImageUri');
@@ -88,14 +70,12 @@ export default function App() {
 
     try {
 
-        // Check if Contacts is not null
         if (!Contacts) {
           Alert.alert('Error', 'Contacts module is not initialized.');
           setIsSaving(false);
           return;
         }
 
-        // Check current permission status
         const permission = await Contacts.checkPermission();
         console.log("Current permission status:", permission);  
 
@@ -127,32 +107,40 @@ export default function App() {
         displayName: contactDetails.name,
         firstName,
         lastName,
-        phoneNumbers: contactDetails.phone ? [
-          { label: 'office', number: contactDetails.phone.office },
-          { label: 'mobile', number: contactDetails.phone.mobile }
-        ] : [],
+        phoneNumbers: [], // Initialize as an empty array
+
+    // Check for existing phone numbers
+    ...(contactDetails.phone && Object.keys(contactDetails.phone).length > 0 && {
+        phoneNumbers: [
+            ...(contactDetails.phone.mobile ? [{ label: 'mobile', number: contactDetails.phone.mobile }] : []),
+            ...(contactDetails.phone.office ? [{ label: 'office', number: contactDetails.phone.office }] : []),
+            ...(contactDetails.phone.work ? [{ label: 'work', number: contactDetails.phone.work }] : []),
+            ...(contactDetails.phone.fax ? [{ label: 'work fax', number: contactDetails.phone.fax }] : []),
+            // Add raw number with 'work' label if it's not already included
+            ...(typeof contactDetails.phone === 'string' ? [{ label: 'work', number: contactDetails.phone }] : [])
+        ]
+    }),
+
         emailAddresses: contactDetails.email ? [{ label: 'work', email: contactDetails.email }] : [],
         company: contactDetails.company_name || 'Not Specified',
         postalAddresses: contactDetails.address
         ? [{
             label: 'work',
-            street: '', // Assume first part of address is the street
-            city: '',   // Assume second part is the city
-            state: '',                    // Add state if available
-            country: '',                  // Add country if available
-            postalCode: '',                    // Add postal code if available
-            formattedAddress: contactDetails.address || '',             // Default value for compatibility
-            pobox: '',                        // Default value for compatibility
-            neighborhood: '',                 // Default value for compatibility
-            region: '',                       // Default value for compatibility
-            postCode: ''            // Add postal code if available
+            street: '', 
+            city: '',  
+            state: '',                 
+            country: '',                
+            postalCode: '',                   
+            formattedAddress: contactDetails.address || '',       
+            pobox: '',                    
+            neighborhood: '',          
+            region: '',                      
+            postCode: ''        
           }]
         : [],
-        website : contactDetails.website || '',
-        note: additionalInfo ? `Website: ${contactDetails.website || ''}\n${additionalInfo}` : '',
+        urlAddresses: contactDetails.website ? [{ label: 'work', url: contactDetails.website }] : [],
+        note: additionalInfo || '',
       };
-
-     // Open the native contact form with pre-filled data
      Contacts.openContactForm(contact)
      .then((contact) => {
        if (contact) {
@@ -258,7 +246,6 @@ export default function App() {
           'Content-Type': 'multipart/form-data'
         }
       });
-      // console.log(response);
       setExtractedText(response.data.extractedText); 
       setIsTextExtracted(true);
     } catch (error) {
@@ -274,7 +261,7 @@ export default function App() {
   const loadPreviousImage = async () => {
     if (previousImageUri) {
       setImageUri(previousImageUri);
-      await uploadImage(previousImageUri); // Load the previous image
+      await uploadImage(previousImageUri); 
     } else {
       Alert.alert('No previous image', 'There is no previously uploaded image.');
     }
@@ -282,14 +269,10 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Centered Content */}
     <View style={styles.centeredContent}>
       {!imageUri && (
         <View style={styles.logoAndTextContainer}>
-          {/* Company Logo */}
           <Image source={require('../assets/fonts/Sprint1-Logo-For-lt-bg.png')} style={styles.logo} />
-
-          {/* Company Info Text */}
           <Text style={styles.infoText}>
             Effortlessly capture and save business card details to your contacts with just one click.
           </Text>
@@ -307,10 +290,7 @@ export default function App() {
   </>
 )}
     </View>
-        {/* Bottom Bar */}
       <View style={styles.bottomBar}>
-
-            {/* Small box showing the previous image */}
         {previousImageUri && (
           <TouchableOpacity onPress={loadPreviousImage} style={styles.previousImageContainer}>
             <Image source={{ uri: previousImageUri }} style={styles.previousImage} />
@@ -322,7 +302,7 @@ export default function App() {
           </TouchableOpacity>
 
 
-                    {/* Three Dots Icon for Dropdown Menu */}
+            {/* Three Dots Icon for Dropdown Menu */}
             <View style={styles.dotMenuContainer}>
               <TouchableOpacity onPress={toggleExpand}>
                 <MaterialIcons name="more-vert" size={30} color="#00539CFF" />
@@ -354,7 +334,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '50%',
     resizeMode: 'contain',
-    // flex: 1,
   },
   loadingText: {
     fontSize: 18,
@@ -364,19 +343,19 @@ const styles = StyleSheet.create({
 
   centeredContent: {
     flex: 1,
-    justifyContent: 'center', // Center content vertically
-    alignItems: 'center',     // Center content horizontally
+    justifyContent: 'center',
+    alignItems: 'center',    
   },
   logoAndTextContainer: {
     alignItems: 'center',
   },
   logo: {
-    width: 250,   // Adjust the width and height of the logo
-    height: 70,  // Example size
+    width: 250,  
+    height: 70, 
   },
   infoText: {
     fontSize: 18,
-    textAlign: 'center',  // Center the text
+    textAlign: 'center',
     color: 'black',
     paddingHorizontal: 40,
     marginBottom: 30,
@@ -384,14 +363,13 @@ const styles = StyleSheet.create({
   },
   infoText2: {
     fontSize: 16,
-    textAlign: 'center',  // Center the text
+    textAlign: 'center',  
     color: 'black',
     paddingHorizontal: 40,
     fontWeight: 'bold'
   },
   bottomBar: {
     height: 150,
-    // backgroundColor: '#fff',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
@@ -399,9 +377,9 @@ const styles = StyleSheet.create({
   },
   previousImageContainer: {
     position: 'absolute',
-    width: 60,  // Adjust the size of the small box
+    width: 60,  
     height: 60,
-    borderRadius: 10,  // Add a slight rounding
+    borderRadius: 10, 
     overflow: 'hidden',
     bottom: 45,
     left: 30
@@ -409,20 +387,21 @@ const styles = StyleSheet.create({
   previousImage: {
     width: '100%',
     height: '100%',
-    resizeMode: 'cover',  // Ensure the image fits the box
+    resizeMode: 'cover', 
   },
   captureButton: {
-    width: 60, // Adjust width to create the round shape
-    height: 60, // Same height as width for a perfect circle
-    borderRadius: 30, // Half of the width/height to make it circular
-    backgroundColor: 'red', // Capture button color (you can customize this)
+    width: 60, 
+    height: 60, 
+    borderRadius: 30,
+    backgroundColor: 'red', 
     justifyContent: 'center',
     alignItems: 'center',
   },
   innerCircle: {
-    width: 40, // Smaller circle inside for the capture effect
+    width: 40, 
     height: 40,
-    borderRadius: 20, // Inner circle color
+    borderRadius: 50, 
+    backgroundColor: '#fff'
   },
   dotMenuContainer: {
     alignItems: 'center',
@@ -430,9 +409,8 @@ const styles = StyleSheet.create({
   },
   expandedIcons: {
     position: 'absolute',
-    top: -50, // Adjust position based on your layout
+    top: -50, 
     left: 10,
-    // backgroundColor: '#fff',
     borderRadius: 5,
     padding: 0,
     height: 50,

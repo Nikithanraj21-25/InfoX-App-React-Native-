@@ -18,48 +18,8 @@ const LeadershipTeam = () => {
       <Text style={styles.subtitle}>
       We are a passionate team of developers, designers, and tech enthusiasts driven by the vision to revolutionize contact management. With a shared commitment to innovation, we bring diverse expertise in mobile development, AI, and user experience design to ensure that Click2Contact offers seamless functionality and a smooth user experience. Our team believes in creating tools that empower users to focus on what truly matters—building meaningful connections.
       </Text>
-
       
       <Text style={styles.header}>Meet the Team</Text>
-{/* 
-      <View style={styles.profileCard}>
-        <Text style={styles.name}>Nikithan A</Text>
-        <Text style={styles.role}>App Developer</Text>
-        <Text style={styles.description}>
-          Former co-founder of Opendoor. Early staff at Spotify and Clearbit.
-        </Text>
-        <View style={styles.socialIcons}>
-          <FontAwesome name="linkedin" size={24} color="black" />
-          <FontAwesome name="github" size={24} color="black" style={styles.iconSpacing} />
-        </View>
-      </View>
-
-      <View style={styles.profileCard}>
-        <Text style={styles.name}>Andrew Jeffri A</Text>
-        <Text style={styles.role}>App Developer</Text>
-        <Text style={styles.description}>
-          Lead engineering teams at Figma, Pitch, and Protocol Labs.
-        </Text>
-        <View style={styles.socialIcons}>
-          <FontAwesome name="linkedin" size={24} color="black" />
-          <FontAwesome name="github" size={24} color="black" style={styles.iconSpacing} />
-        </View>
-      </View>
-
-      <View style={styles.profileCard}>
-        <Text style={styles.name}>Pokuru Tejesh</Text>
-        <Text style={styles.role}>App Developer</Text>
-        <Text style={styles.description}>
-          Former PM for Linear, Lambda School, and On Deck.
-        </Text>
-        <View style={styles.socialIcons}>
-          <FontAwesome name="linkedin" size={24} color="black" />
-          <FontAwesome name="github" size={24} color="black" style={styles.iconSpacing} />
-        </View>
-      </View>
- */}
-
-
       <View style={styles.cardContainer}>
         {/* First Card */}
         <View style={styles.card}>
@@ -112,7 +72,6 @@ const LeadershipTeam = () => {
 
       <Text style={styles.header}>
         Our Collaboration Spirit
-        {/* <FontAwesome name="github" size={24} color="black" style={styles.iconSpacing1} /> */}
       </Text>
 
       <Text style={styles.subtitle}>
@@ -135,7 +94,7 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     backgroundColor: '#fff',
-    paddingBottom: 40, // Extra space at the bottom
+    paddingBottom: 40, 
   },
   cardContainer: {
     flexDirection: 'row',
@@ -143,9 +102,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   iconContainer: {
-    flexDirection: 'row', // Aligns icons in a row
-    justifyContent: 'flex-end', // Aligns icons to the right
-    marginTop: 'auto', // Pushes the icon container to the bottom of the card
+    flexDirection: 'row', 
+    justifyContent: 'flex-end', 
+    marginTop: 'auto', 
   },
   cardNumber: {
     fontSize: 16,
@@ -175,12 +134,6 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
-
-
-    // // Your existing styles for card
-    // flex: 1, // Allows the card to grow and use available space
-    // justifyContent: 'space-between', // Space between title/description and icons
-    // borderWidth: 1, // Example border for visual separation
   },
   header: {
     fontSize: 24,
@@ -232,10 +185,6 @@ const styles = StyleSheet.create({
   iconSpacing: {
     marginHorizontal: 10,
     marginLeft: 10,
-    // justifyContent: 'center',
-    // gap:20,
-    // alignItems: 'center'
-    // paddingLeft: 10,
   },
 });
 
