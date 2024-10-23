@@ -9,7 +9,7 @@
   "routes": [
     {
       "src": "/api/process-image",
-      "dest": "/script.js"
+      "dest": "/api/script.js"
     }
   ]
 }
