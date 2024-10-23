@@ -10,28 +10,30 @@ const cors = require('cors');
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3000; // Use environment variable for port
+const port = 3000; 
 
 const corsOptions = {
-  origin: '*', // Allow requests from any origin
+  origin: '*', // Allow requests from the React Native app
   methods: ['GET', 'POST'], // Specify the allowed methods
 };
 
 app.use(cors(corsOptions));
 
 // Configure multer for handling file uploads
-const upload = multer({ storage: multer.memoryStorage() });
+const upload = multer({ dest: 'uploads/' }); // 'uploads/' is where images will be temporarily stored
 
 // Middleware to parse JSON request bodies
 app.use(express.json());
 
-app.post('/api/process-image', upload.single('image'), async (req, res) => {
+app.post('/process-image',upload.single('image'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).send({ message: 'No file uploaded.' });
     }
 
-    const base64Image = req.file.buffer.toString('base64'); // Get the base64 string directly from the buffer
+    const imagePath = join(__dirname, req.file.path); // Get the file path
+
+    const base64Image = readFileSync(imagePath).toString('base64');
 
     const apiKey = process.env.OPENAI_API_KEY;
     const headers = {
@@ -47,7 +49,7 @@ app.post('/api/process-image', upload.single('image'), async (req, res) => {
           content: [
             {
               type: 'text',
-              text: `Please provide the extracted details in plain JSON format without any additional text or formatting or quotes. Include all the relevant information as shown below:
+              text: `Please provide the extracted details in plain JSON format without any additional text or formatting or qoutes. Include all the relevant information as shown below:
 
               {
                   "name": "Tom Fechter",
@@ -95,9 +97,11 @@ app.post('/api/process-image', upload.single('image'), async (req, res) => {
 
   } catch (error) {
     console.error('Error:', error.message);
-    res.status(500).json({ error: error.message || 'Something went wrong' });
+    res.status(500).json({ error: error.message || 'Something went wrong'  });
   }
 });
 
-// Export the app for Vercel
-module.exports = app;
+// Start the server
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
+});

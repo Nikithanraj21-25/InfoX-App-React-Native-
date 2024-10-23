@@ -241,7 +241,7 @@ export default function App() {
     }as any);
   
     try {
-      const response = await axios.post('http://express-backend-4sca6sk8o-nikithanrajs-projects.vercel.app/api/process-image', formData, {
+      const response = await axios.post('http://192.168.32.128:3000/process-image', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
