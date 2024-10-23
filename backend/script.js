@@ -20,7 +20,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // Configure multer for handling file uploads
-const upload = multer({ dest: 'uploads/' }); // 'uploads/' is where images will be temporarily stored
+const upload = multer({ storage: multer.memoryStorage() });
 
 // Middleware to parse JSON request bodies
 app.use(express.json());
@@ -31,8 +31,7 @@ app.post('/process-image', upload.single('image'), async (req, res) => {
       return res.status(400).send({ message: 'No file uploaded.' });
     }
 
-    const imagePath = join(__dirname, req.file.path); // Get the file path
-    const base64Image = readFileSync(imagePath).toString('base64');
+    const base64Image = req.file.buffer.toString('base64'); // Get the base64 string directly from the buffer
 
     const apiKey = process.env.OPENAI_API_KEY;
     const headers = {
