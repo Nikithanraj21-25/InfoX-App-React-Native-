@@ -10,11 +10,6 @@
     {
       "src": "/process-image",
       "dest": "/script.js"
-    },
-    {
-      "src": "/(.*)",
-      "methods": ["GET", "POST"],
-      "dest": "/script.js"
     }
   ]
 }
