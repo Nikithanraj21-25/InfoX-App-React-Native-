@@ -10,7 +10,7 @@ const cors = require('cors');
 dotenv.config();
 
 const app = express();
-const port = 3000; 
+const port = process.env.PORT || 3000; 
 
 const corsOptions = {
   origin: '*', // Allow requests from the React Native app
@@ -44,31 +44,26 @@ app.post('/process-image',upload.single('image'), async (req, res) => {
       messages: [
         {
           role: 'user',
-          content: [
-            {
-              type: 'text',
-              text: `Please provide the extracted details in plain JSON format without any additional text or formatting or qoutes. Include all the relevant information as shown below:
+          content: `Please provide the extracted details in plain JSON format without any additional text or formatting or quotes. Include all the relevant information as shown below:
 
-              {
-                  "name": "Tom Fechter",
-                  "company_name": "PIRTEK",
-                  "phone": {
-                  office: "414-800-6150",
-                  mobile: "262-777-0936"
-                },
-                  "email": "tfechter@pirtekiwi.com",
-                  "address": "W140N5955 Lilly Road, Menomonee Falls, WI 53051",
-                  "website": "www.pirtekusa.com/locations/menomonee-falls",
-                  "job_title": "President"
-              }`
-            },
-            {
-              type: 'image_url',
-              image_url: {
-                url: `data:image/png;base64,${base64Image}`
-              }
-            }
-          ]
+          {
+              "name": "Tom Fechter",
+              "company_name": "PIRTEK",
+              "phone": {
+                "office": "414-800-6150",
+                "mobile": "262-777-0936"
+              },
+              "email": "tfechter@pirtekiwi.com",
+              "address": "W140N5955 Lilly Road, Menomonee Falls, WI 53051",
+              "website": "www.pirtekusa.com/locations/menomonee-falls",
+              "job_title": "President"
+          }`
+        },
+        {
+          type: 'image_url',
+          image_url: {
+            url: `data:image/png;base64,${base64Image}`
+          }
         }
       ],
       max_tokens: 300
