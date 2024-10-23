@@ -241,7 +241,7 @@ export default function App() {
     }as any);
   
     try {
-      const response = await axios.post('https://express-backend-f5lb17aim-nikithanrajs-projects.vercel.app/process-image', formData, {
+      const response = await axios.post('https://express-backend-cjisax7au-nikithanrajs-projects.vercel.app/process-image', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

@@ -26,6 +26,8 @@ const upload = multer({ storage });
 app.use(express.json());
 
 app.post('/process-image', upload.single('image'), async (req, res) => {
+  console.log('Received request:', req.body);
+  console.log('File uploaded:', req.file);
   try {
     if (!req.file) {
       return res.status(400).send({ message: 'No file uploaded.' });
@@ -101,3 +103,11 @@ app.post('/process-image', upload.single('image'), async (req, res) => {
 
 // Export the app for Vercel
 module.exports = app;
+
+// Import and handle requests
+if (require.main === module) {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+}
