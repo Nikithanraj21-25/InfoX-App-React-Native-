@@ -25,7 +25,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 // Middleware to parse JSON request bodies
 app.use(express.json());
 
-app.post('/process-image', upload.single('image'), async (req, res) => {
+app.post('/api/process-image', upload.single('image'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).send({ message: 'No file uploaded.' });
