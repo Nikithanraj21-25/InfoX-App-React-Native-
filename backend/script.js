@@ -10,7 +10,6 @@ const cors = require('cors');
 dotenv.config();
 
 const app = express();
-const port = 3000; 
 
 const corsOptions = {
   origin: '*', // Allow requests from the React Native app
@@ -26,7 +25,7 @@ const upload = multer({ storage });
 // Middleware to parse JSON request bodies
 app.use(express.json());
 
-app.post('/process-image',upload.single('image'), async (req, res) => {
+app.post('/process-image', upload.single('image'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).send({ message: 'No file uploaded.' });
@@ -48,7 +47,7 @@ app.post('/process-image',upload.single('image'), async (req, res) => {
           content: [
             {
               type: 'text',
-              text: `Please provide the extracted details in plain JSON format without any additional text or formatting or qoutes. Include all the relevant information as shown below:
+              text: `Please provide the extracted details in plain JSON format without any additional text or formatting or quotes. Include all the relevant information as shown below:
 
               {
                   "name": "Tom Fechter",
@@ -96,11 +95,9 @@ app.post('/process-image',upload.single('image'), async (req, res) => {
 
   } catch (error) {
     console.error('Error:', error.message);
-    res.status(500).json({ error: error.message || 'Something went wrong'  });
+    res.status(500).json({ error: error.message || 'Something went wrong' });
   }
 });
 
-// Start the server
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
+// Export the app for Vercel
+module.exports = app;
