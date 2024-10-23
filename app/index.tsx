@@ -241,7 +241,7 @@ export default function App() {
     }as any);
   
     try {
-      const response = await axios.post('https://express-backend-inky.vercel.app/process-image', formData, {
+      const response = await axios.post('http://192.168.32.128:3000/process-image', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

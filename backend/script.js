@@ -10,28 +10,29 @@ const cors = require('cors');
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3000; 
+const port = process.env.PORT || 3000; // Use environment variable for port
 
 const corsOptions = {
-  origin: '*', // Allow requests from the React Native app
+  origin: '*', // Allow requests from any origin
   methods: ['GET', 'POST'], // Specify the allowed methods
 };
 
 app.use(cors(corsOptions));
 
 // Configure multer for handling file uploads
-const upload = multer({ storage: multer.memoryStorage() });// 'uploads/' is where images will be temporarily stored
+const upload = multer({ dest: 'uploads/' }); // 'uploads/' is where images will be temporarily stored
 
 // Middleware to parse JSON request bodies
 app.use(express.json());
 
-app.post('/process-image',upload.single('image'), async (req, res) => {
+app.post('/process-image', upload.single('image'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).send({ message: 'No file uploaded.' });
     }
 
-    const base64Image = req.file.buffer.toString('base64');
+    const imagePath = join(__dirname, req.file.path); // Get the file path
+    const base64Image = readFileSync(imagePath).toString('base64');
 
     const apiKey = process.env.OPENAI_API_KEY;
     const headers = {
@@ -44,26 +45,31 @@ app.post('/process-image',upload.single('image'), async (req, res) => {
       messages: [
         {
           role: 'user',
-          content: `Please provide the extracted details in plain JSON format without any additional text or formatting or quotes. Include all the relevant information as shown below:
+          content: [
+            {
+              type: 'text',
+              text: `Please provide the extracted details in plain JSON format without any additional text or formatting or quotes. Include all the relevant information as shown below:
 
-          {
-              "name": "Tom Fechter",
-              "company_name": "PIRTEK",
-              "phone": {
-                "office": "414-800-6150",
-                "mobile": "262-777-0936"
-              },
-              "email": "tfechter@pirtekiwi.com",
-              "address": "W140N5955 Lilly Road, Menomonee Falls, WI 53051",
-              "website": "www.pirtekusa.com/locations/menomonee-falls",
-              "job_title": "President"
-          }`
-        },
-        {
-          type: 'image_url',
-          image_url: {
-            url: `data:image/png;base64,${base64Image}`
-          }
+              {
+                  "name": "Tom Fechter",
+                  "company_name": "PIRTEK",
+                  "phone": {
+                  office: "414-800-6150",
+                  mobile: "262-777-0936"
+                },
+                  "email": "tfechter@pirtekiwi.com",
+                  "address": "W140N5955 Lilly Road, Menomonee Falls, WI 53051",
+                  "website": "www.pirtekusa.com/locations/menomonee-falls",
+                  "job_title": "President"
+              }`
+            },
+            {
+              type: 'image_url',
+              image_url: {
+                url: `data:image/png;base64,${base64Image}`
+              }
+            }
+          ]
         }
       ],
       max_tokens: 300
@@ -90,11 +96,9 @@ app.post('/process-image',upload.single('image'), async (req, res) => {
 
   } catch (error) {
     console.error('Error:', error.message);
-    res.status(500).json({ error: error.message || 'Something went wrong'  });
+    res.status(500).json({ error: error.message || 'Something went wrong' });
   }
 });
 
-// Start the server
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
+// Export the app for Vercel
+module.exports = app;
