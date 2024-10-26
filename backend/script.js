@@ -1,7 +1,5 @@
-const { join } = require('path'); 
-const express = require('express'); 
+ const express = require('express'); 
 const dotenv = require('dotenv'); 
-const { readFileSync } = require('fs'); 
 const axios = require('axios');
 const multer = require('multer');
 const cors = require('cors');
@@ -10,6 +8,7 @@ const cors = require('cors');
 dotenv.config();
 
 const app = express();
+const port = 3000; 
 
 const corsOptions = {
   origin: '*', // Allow requests from the React Native app
@@ -25,9 +24,7 @@ const upload = multer({ storage });
 // Middleware to parse JSON request bodies
 app.use(express.json());
 
-app.post('/process-image', upload.single('image'), async (req, res) => {
-  console.log('Received request:', req.body);
-  console.log('File uploaded:', req.file);
+app.post('/process-image',upload.single('image'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).send({ message: 'No file uploaded.' });
@@ -36,6 +33,7 @@ app.post('/process-image', upload.single('image'), async (req, res) => {
     const base64Image = req.file.buffer.toString('base64');
 
     const apiKey = process.env.OPENAI_API_KEY;
+    console.log(apiKey);
     const headers = {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${apiKey}`
@@ -49,14 +47,15 @@ app.post('/process-image', upload.single('image'), async (req, res) => {
           content: [
             {
               type: 'text',
-              text: `Please provide the extracted details in plain JSON format without any additional text or formatting or quotes. Include all the relevant information as shown below:
+              text: `Please provide the extracted details in plain JSON format without any additional text or formatting or qoutes. Include all the relevant information as shown below:
 
               {
                   "name": "Tom Fechter",
                   "company_name": "PIRTEK",
                   "phone": {
                   office: "414-800-6150",
-                  mobile: "262-777-0936"
+                  mobile: "262-777-0936",
+                  "fax": "262-345-9901"
                 },
                   "email": "tfechter@pirtekiwi.com",
                   "address": "W140N5955 Lilly Road, Menomonee Falls, WI 53051",
@@ -97,17 +96,13 @@ app.post('/process-image', upload.single('image'), async (req, res) => {
 
   } catch (error) {
     console.error('Error:', error.message);
-    res.status(500).json({ error: error.message || 'Something went wrong' });
+    res.status(500).json({ error: error.message || 'Something went wrong'  });
   }
 });
 
-// Export the app for Vercel
-module.exports = app;
+// Start the server
+// app.listen(port, () => {
+//   console.log(`Server is running on http://localhost:${port}`);
+// });
 
-// Import and handle requests
-if (require.main === module) {
-  const PORT = process.env.PORT || 3000;
-  app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-  });
-}
+module.exports = app; // Export the app for Vercel's serverless functions
