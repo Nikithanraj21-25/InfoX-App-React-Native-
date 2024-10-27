@@ -241,7 +241,7 @@ export default function App() {
     }as any);
   
     try {
-      const response = await axios.post('http://192.168.215.128:3000/process-image', formData, {
+      const response = await axios.post('https://backend-blob-storage-oyolfk1t1-nikithanrajs-projects.vercel.app/process-image', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

@@ -1,5 +1,5 @@
- const express = require('express'); 
-const dotenv = require('dotenv'); 
+const express = require('express'); 
+const dotenv = require('dotenv');  
 const axios = require('axios');
 const multer = require('multer');
 const cors = require('cors');
@@ -24,7 +24,7 @@ const upload = multer({ storage });
 // Middleware to parse JSON request bodies
 app.use(express.json());
 
-app.post('/api/process-image',upload.single('image'), async (req, res) => {
+app.post('/process-image',upload.single('image'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).send({ message: 'No file uploaded.' });
@@ -54,8 +54,7 @@ app.post('/api/process-image',upload.single('image'), async (req, res) => {
                   "company_name": "PIRTEK",
                   "phone": {
                   office: "414-800-6150",
-                  mobile: "262-777-0936",
-                  "fax": "262-345-9901"
+                  mobile: "262-777-0936"
                 },
                   "email": "tfechter@pirtekiwi.com",
                   "address": "W140N5955 Lilly Road, Menomonee Falls, WI 53051",
@@ -101,8 +100,6 @@ app.post('/api/process-image',upload.single('image'), async (req, res) => {
 });
 
 // Start the server
-// app.listen(port, () => {
-//   console.log(`Server is running on http://localhost:${port}`);
-// });
-
-module.exports = app; // Export the app for Vercel's serverless functions
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
+});
