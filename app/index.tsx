@@ -241,7 +241,7 @@ export default function App() {
     }as any);
   
     try {
-      const response = await axios.post('https://backend-blob-storage-oyolfk1t1-nikithanrajs-projects.vercel.app/process-image', formData, {
+      const response = await axios.post('https://backend-exzts10rm-nikithanrajs-projects.vercel.app/process-image', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -317,9 +317,8 @@ export default function App() {
                 </View>
               )}
             </View>
-
-  
       </View>
+
 </SafeAreaView>
   );
 }
