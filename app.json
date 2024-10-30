@@ -16,7 +16,12 @@
       "supportsTablet": true
     },
     "android": {
-      "permissions": ["READ_CONTACTS", "WRITE_CONTACTS"],
+      "permissions": [
+        "READ_CONTACTS",
+        "WRITE_CONTACTS",
+        "android.permission.READ_CONTACTS",
+        "android.permission.WRITE_CONTACTS"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/logo_final.jpeg",
         "backgroundColor": "#ffffff"
@@ -39,6 +44,11 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "68eaeea0-1c98-462c-8e0e-9d2a47c7af19"
+      }
     }
   }
 }
