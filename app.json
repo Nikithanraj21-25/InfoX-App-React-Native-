@@ -13,7 +13,8 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.nikithan.InfoX"
     },
     "android": {
       "permissions": [
@@ -49,6 +50,7 @@
       "eas": {
         "projectId": "68eaeea0-1c98-462c-8e0e-9d2a47c7af19"
       }
-    }
+    },
+    "owner": "nikithan"
   }
 }
